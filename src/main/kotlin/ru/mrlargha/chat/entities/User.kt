@@ -9,6 +9,6 @@ class User(
         val lastName: String,
         val email: String,
         val passHash: String,
-        val token: String
+        var token: String? = null
 ) : BaseEntity<Long>() {
 }

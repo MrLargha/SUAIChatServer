@@ -7,5 +7,7 @@ import ru.mrlargha.chat.entities.User
 
 @RepositoryRestResource(collectionResourceRel = "users", path = "users")
 interface UserRepository : PagingAndSortingRepository<User, Long> {
-    fun findByLastName(@Param("lastName") name: String?): List<User?>?
+    fun findByEmail(@Param("email") name: String?): List<User>
+    fun findByToken(@Param("token") name: String?): List<User>
+
 }
