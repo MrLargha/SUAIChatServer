@@ -57,11 +57,11 @@ class RestAuthController(private val userRepository: UserRepository) {
     fun loginUser(@RequestBody requestBody: LoginPayload): ResponseEntity<AuthResult> {
         val users = userRepository.findByEmail(requestBody.email)
         val encodedPassword = hashPassword(requestBody.email, requestBody.password)
-        if (users.isEmpty() || users.size > 1 || users.first()?.passHash != encodedPassword) {
+        if (users.isEmpty() || users.size > 1 || users.first().passHash != encodedPassword) {
             return ResponseEntity(HttpStatus.UNAUTHORIZED)
         }
         val newToken = getNewToken()
-        users.first()?.let {
+        users.first().let {
             userRepository.save(it.apply { this.token = newToken })
         }
         return ResponseEntity(AuthResult("ok", newToken), HttpStatus.OK)
@@ -69,13 +69,10 @@ class RestAuthController(private val userRepository: UserRepository) {
 
     @PostMapping("/logout")
     fun logoutUser(@RequestHeader headers: HttpHeaders): ResponseEntity<Any> {
-        val tokenHeader = headers["Authorization"]
-        if (tokenHeader == null || tokenHeader.isEmpty()) {
-            return ResponseEntity(HttpStatus.BAD_REQUEST)
-        }
-        val users = userRepository.findByToken(tokenHeader.first()) ?: return ResponseEntity(HttpStatus.UNAUTHORIZED)
+        val token = Utils.extractToken(headers) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+        val users = userRepository.findByToken(token)
         val user = if(users.isNotEmpty()) users.first() else return ResponseEntity(HttpStatus.UNAUTHORIZED)
-        userRepository.save(user.apply { token = null })
+        userRepository.save(user.apply { this.token = null })
         return ResponseEntity(HttpStatus.OK)
     }
 }

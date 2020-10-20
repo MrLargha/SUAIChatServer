@@ -9,5 +9,5 @@ import ru.mrlargha.chat.entities.User
 interface UserRepository : PagingAndSortingRepository<User, Long> {
     fun findByEmail(@Param("email") name: String?): List<User>
     fun findByToken(@Param("token") name: String?): List<User>
-
+    fun existsByToken(@Param("token") name: String?) : Boolean
 }
