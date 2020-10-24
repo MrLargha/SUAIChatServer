@@ -9,6 +9,7 @@ import ru.mrlargha.chat.repositories.UserRepository
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.*
+import java.util.regex.Pattern
 
 
 @RestController
@@ -47,6 +48,12 @@ class RestAuthController(private val userRepository: UserRepository) {
         if (registeredUsers.isNotEmpty()) {
             return ResponseEntity(HttpStatus.UNAUTHORIZED)
         }
+
+        val emailPattern = Pattern.compile("([a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*)@[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)+")
+        if(!emailPattern.matcher(requestBody.email).matches() || requestBody.password.length < 5){
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
+
         val encodedPassword = hashPassword(requestBody.email, requestBody.password)
         val token = getNewToken()
         userRepository.save(User(requestBody.firstName, requestBody.lastName, requestBody.email, encodedPassword, token))

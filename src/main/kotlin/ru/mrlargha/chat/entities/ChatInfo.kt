@@ -1,9 +1,14 @@
 package ru.mrlargha.chat.entities
 
-import javax.persistence.Entity
-import javax.persistence.Table
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import javax.persistence.*
 
 @Entity
-@Table(name = "chat_info")
-class ChatInfo : BaseEntity<Long>() {
-}
+@Table(name = "chats")
+class ChatInfo(
+        val chatName: String,
+        val chatIconName: String,
+        @ManyToMany(mappedBy = "chats", fetch = FetchType.LAZY)
+        @JsonIgnoreProperties("chats")
+        val users: MutableSet<User> = mutableSetOf()
+) : BaseEntity<Long>()

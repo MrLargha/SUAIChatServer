@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import ru.mrlargha.chat.repositories.ChatRepository
+//import ru.mrlargha.chat.repositories.ChatRepository
 import ru.mrlargha.chat.repositories.UserRepository
 
 @RequestMapping("/chats")
 @RestController
-class ChatsController(private val userRepository: UserRepository, private val chatRepository: ChatRepository) {
+class ChatsController(private val userRepository: UserRepository) {
 
     class UserPresentation(
             val firstName: String,
