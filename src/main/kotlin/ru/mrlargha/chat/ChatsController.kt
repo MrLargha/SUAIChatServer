@@ -41,5 +41,15 @@ class ChatsController(
         return ResponseEntity(chatInfo, HttpStatus.OK)
     }
 
+    @GetMapping("/myChats")
+    fun myChats(@RequestHeader headers: HttpHeaders) : ResponseEntity<Any> {
+        val token = Utils.extractToken(headers) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+        val users = userRepository.findByToken(token)
+        if (users.isEmpty()) return ResponseEntity(HttpStatus.UNAUTHORIZED)
+        val user = users.first()
+        return ResponseEntity(chatInfoRepository.findAllByUsers(user), HttpStatus.OK)
+    }
+
+
     data class ChatCreateBody(val chatName: String, val usersIds: List<Long>)
 }
