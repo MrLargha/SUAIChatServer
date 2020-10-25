@@ -1,17 +1,16 @@
 package ru.mrlargha.chat.entities
 
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.Table
-import javax.persistence.Temporal
-import javax.persistence.TemporalType
+import javax.persistence.*
 
 @Entity
 @Table(name = "messages")
 class ChatMessage(
-        val chatId: Long,
+        @ManyToOne
+        @JoinColumn(name = "chat", nullable = false)
+        val chat: ChatInfo,
         val userId: Long,
         val content: String,
         @Temporal(TemporalType.TIMESTAMP)
-        val timestamp: Date
+        val date: Date
 ) : BaseEntity<Long>()

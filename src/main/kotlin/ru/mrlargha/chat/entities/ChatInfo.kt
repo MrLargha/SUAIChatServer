@@ -7,8 +7,18 @@ import javax.persistence.*
 @Table(name = "chats")
 class ChatInfo(
         val chatName: String,
-        val chatIconName: String,
-        @ManyToMany(mappedBy = "chats", fetch = FetchType.LAZY)
+        val chatIconName: String?,
+
         @JsonIgnoreProperties("chats")
-        val users: MutableSet<User> = mutableSetOf()
+        @ManyToMany(fetch = FetchType.LAZY)
+        @JoinTable(name = "chats_users",
+                joinColumns = [
+                        JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable = false)
+                ],
+                inverseJoinColumns = [
+                        JoinColumn(name = "chat_id", referencedColumnName = "id", nullable = false, updatable = false)])
+        val users: MutableSet<User> = mutableSetOf(),
+
+        @OneToMany(mappedBy = "chat", fetch = FetchType.LAZY)
+        val messages: MutableSet<ChatMessage> = mutableSetOf()
 ) : BaseEntity<Long>()

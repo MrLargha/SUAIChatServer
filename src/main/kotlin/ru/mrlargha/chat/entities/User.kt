@@ -9,20 +9,17 @@ import javax.persistence.*
 class User(
         val firstName: String,
         val lastName: String,
+
         @JsonIgnore
         val email: String,
+
         @JsonIgnore
         val passHash: String,
+
         @JsonIgnore
         var token: String? = null,
-        @ManyToMany(fetch = FetchType.LAZY)
-        @JoinTable(name = "chats_users",
-                joinColumns = [
-                    JoinColumn(name = "chat_id", referencedColumnName = "id", nullable = false, updatable = false)
-                ],
-                inverseJoinColumns = [
-                    JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable = false)])
-        @JsonIgnoreProperties("users")
+
+        @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+        @JsonIgnore
         var chats: MutableSet<ChatInfo> = mutableSetOf()
-) : BaseEntity<Long>() {
-}
+) : BaseEntity<Long>()
