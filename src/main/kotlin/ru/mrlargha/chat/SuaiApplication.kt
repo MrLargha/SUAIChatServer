@@ -15,8 +15,7 @@ import ru.mrlargha.chat.repositories.UserRepository
 
 class SuaiApplication {
     @Bean
-    fun mappingDemo(chatInfoRepository: ChatInfoRepository, userRepository: UserRepository)
-    = CommandLineRunner{
+    fun mappingDemo(chatInfoRepository: ChatInfoRepository, userRepository: UserRepository) = CommandLineRunner {
 //        val user1 = User("Иванов", "Иван", "ivanov@mail.com", "pass")
 //        val user2 = User("Петров", "Сергей", "petrov@mail.com", "pass2")
 //

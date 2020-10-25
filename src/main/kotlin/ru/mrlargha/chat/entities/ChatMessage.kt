@@ -9,7 +9,10 @@ class ChatMessage(
         @ManyToOne
         @JoinColumn(name = "chat", nullable = false)
         val chat: ChatInfo,
-        val userId: Long,
+
+        @ManyToOne
+        @JoinColumn(name = "char", nullable = false)
+        val user: User,
         val content: String,
         @Temporal(TemporalType.TIMESTAMP)
         val date: Date
