@@ -38,8 +38,6 @@ class RestAuthController(private val userRepository: UserRepository) {
             val digest: MessageDigest = MessageDigest.getInstance("SHA3-256")
             return digest.digest((name + "_SALT_" + pass + "_SALT2_").toByteArray(StandardCharsets.UTF_8)).toString(StandardCharsets.UTF_8)
         }
-
-        private fun getNewToken() = UUID.randomUUID().toString().replace("-", "")
     }
 
     @PostMapping("/register")
@@ -55,7 +53,7 @@ class RestAuthController(private val userRepository: UserRepository) {
         }
 
         val encodedPassword = hashPassword(requestBody.email, requestBody.password)
-        val token = getNewToken()
+        val token = Utils.getUUID()
         userRepository.save(User(requestBody.firstName, requestBody.lastName, requestBody.email, encodedPassword, token))
         return ResponseEntity(AuthResult("ok", token), HttpStatus.OK)
     }
@@ -67,7 +65,7 @@ class RestAuthController(private val userRepository: UserRepository) {
         if (users.isEmpty() || users.size > 1 || users.first().passHash != encodedPassword) {
             return ResponseEntity(HttpStatus.UNAUTHORIZED)
         }
-        val newToken = getNewToken()
+        val newToken = Utils.getUUID()
         users.first().let {
             userRepository.save(it.apply { this.token = newToken })
         }

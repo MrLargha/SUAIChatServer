@@ -21,5 +21,7 @@ class User(
 
         @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
         @JsonIgnore
-        var chats: MutableSet<ChatInfo> = mutableSetOf()
+        var chats: MutableSet<ChatInfo> = mutableSetOf(),
+
+        var avatarName: String? = null
 ) : BaseEntity<Long>()

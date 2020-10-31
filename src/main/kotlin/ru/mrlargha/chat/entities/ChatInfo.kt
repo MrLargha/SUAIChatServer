@@ -8,7 +8,7 @@ import javax.persistence.*
 @Table(name = "chats")
 class ChatInfo(
         val chatName: String,
-        val chatIconName: String?,
+        var chatIconName: String? = null,
 
         @JsonIgnoreProperties("chats")
         @ManyToMany(fetch = FetchType.LAZY)
