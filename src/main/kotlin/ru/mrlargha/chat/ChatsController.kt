@@ -63,13 +63,12 @@ class ChatsController(
     }
 
     @GetMapping("/getMessages")
-    fun getMessages(@RequestHeader headers: HttpHeaders, @RequestBody body: MessagesRequestBody): ResponseEntity<Any> {
+    fun getMessages(@RequestHeader headers: HttpHeaders, @RequestParam chatId: Long): ResponseEntity<Any> {
         val token = Utils.extractToken(headers) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
         if (!userRepository.existsByToken(token)) return ResponseEntity(HttpStatus.UNAUTHORIZED)
-        return ResponseEntity(chatMessagesRepository.findAllByChat(chatInfoRepository.findById(body.chatId).get()), HttpStatus.OK)
+        return ResponseEntity(chatMessagesRepository.findAllByChat(chatInfoRepository.findById(chatId).get()), HttpStatus.OK)
     }
 
-    data class MessagesRequestBody(val chatId: Long)
     data class ChatCreateBody(val chatName: String, val usersIds: List<Long>)
     data class MessageBody(val chatId: Long, val message: String)
 }
