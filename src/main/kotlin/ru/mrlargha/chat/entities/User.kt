@@ -7,8 +7,8 @@ import javax.persistence.*
 @Entity
 @Table(name = "users")
 class User(
-        val firstName: String,
-        val lastName: String,
+        var firstName: String,
+        var lastName: String,
 
         @JsonIgnore
         val email: String,

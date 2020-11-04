@@ -7,9 +7,7 @@ import ru.mrlargha.chat.storage.StorageProperties
 
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties::class)
-class SuaiApplication {
-
-}
+class SuaiApplication
 
 fun main(args: Array<String>) {
     runApplication<SuaiApplication>(*args)

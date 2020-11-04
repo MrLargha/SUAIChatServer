@@ -30,6 +30,26 @@ class UserProfileController @Autowired constructor(
         return ResponseEntity.ok().build()
     }
 
+    @GetMapping("/getInfoAboutMe")
+    fun getInfoAboutMe(@RequestHeader headers: HttpHeaders): ResponseEntity<Any> {
+        val token = Utils.extractToken(headers) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+        val users = userRepository.findByToken(token)
+        val user = if (users.isNotEmpty()) users.first() else return ResponseEntity(HttpStatus.UNAUTHORIZED)
+        return ResponseEntity(user, HttpStatus.OK)
+    }
+
+    @PutMapping("/updateInfoAboutMe")
+    fun updateInfo(@RequestHeader headers: HttpHeaders, @RequestBody body: ProfileUpdate): ResponseEntity<Any> {
+        val token = Utils.extractToken(headers) ?: return ResponseEntity(HttpStatus.BAD_REQUEST)
+        val users = userRepository.findByToken(token)
+        val user = if (users.isNotEmpty()) users.first() else return ResponseEntity(HttpStatus.UNAUTHORIZED)
+        userRepository.save(user.apply {
+            firstName = body.firstName
+            lastName = body.lastName
+        })
+        return ResponseEntity.ok().build()
+    }
+
     @PostMapping("/uploadChatImage")
     fun uploadChatImage(@RequestHeader headers: HttpHeaders, @RequestParam("file") file: MultipartFile,
                         @RequestParam chatId: Long
@@ -52,4 +72,6 @@ class UserProfileController @Autowired constructor(
         }
         return ResponseEntity.notFound().build()
     }
+
+    data class ProfileUpdate(val firstName: String, val lastName: String)
 }
